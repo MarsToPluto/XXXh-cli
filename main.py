@@ -1,7 +1,7 @@
 import paramiko
 import argparse
+import subprocess
 import time
-import os
 
 # Define SSH connection profiles
 profiles = {
@@ -50,6 +50,13 @@ def ssh_connect(profile_key):
             command = input(f"{colored_prompt}Enter command: ")
             if command.lower() == 'exit':
                 break
+            
+            # Handle specific command for opening nano
+            if command.lower().startswith('nano '):
+                file_to_edit = command[5:].strip()
+                # Open nano editor in a subprocess
+                subprocess.run(['nano', file_to_edit])
+                continue  # Return to command input after closing nano
             
             # Send the command to the shell
             shell.send(command + '\n')
